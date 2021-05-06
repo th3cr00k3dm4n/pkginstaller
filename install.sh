@@ -181,6 +181,7 @@ dpkg -s git >/dev/null 2>&1
         then pkg install git -y
       fi
 echo " working.."
+cd $HOME
 git clone https://github.com/th3cr00k3dm4n/games
 cd $HOME
 cd games
