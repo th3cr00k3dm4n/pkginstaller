@@ -1,8 +1,8 @@
- #!/bin/bash
+#!/bin/bash
+#last updated on:07-05-2021:12:29
 #codded by th3cr00k3dm4n
  banner()
  {
-
 echo "╔══╗──────────────╔╗"
 echo "║╔╗║──────────────║║"
 echo "║╚╝╚╦══╦══╦╦══╗╔══╣║╔╦══╗"
@@ -20,17 +20,26 @@ echo "╚╩╝╚╩══╩═╩╝╚╩═╩═╩══╩╝"
 echo ""
 echo ""
 echo ""
-echo "Codded by : th3cr00kedm4n"
+echo "Codded by : th3cr00kedm4n" | lolcat -a -d 10
 echo ""
 echo ""
  }
 
 pkg=( "python" "python2" "pip" "php" "openssh" "curl" "nano" "toilet" "nmap" "figlet" "unzip" "tor" "wget" "toilet"  "ruby" "cowsay" "cacafire" "cmatrix" )
 
+
+run_depen()
+{
+ clear
+ echo "installing depedency....."
+ pkg install ruby -y && gem install lolcat || run_depen
+}
+
+
 run_script()
 {
   banner
-PS3='SELECT An OPTION : ' 
+PS3='SELECT An OPTION : '
  options=("Auto Install basic packages" "manually install packages" "Install extra keys" "Uninstall packages" "Games for termux" "About" "Quit")
 select opt in "${options[@]}"
 do
@@ -41,7 +50,7 @@ do
            run_install
 break
           ;;
-          
+
           "manually install packages")
           clear
           run_manual
@@ -96,23 +105,22 @@ done
 
 
 run_install()
-{   
+{
     clear
     banner
     read -p "This will install some basic packages for tremux Do you want to install ? [Y/n] :" ans
     if [ $ans == "y" ]
     then
         {
-        pkg install ${pkg[@]} -y
-        if [ $? == 0 ]
-        then echo "finished" 
-        else  echo " failed try again" || run_install
-        fi
+        pkg install ${pkg[@]} -y && echo " finished" || echo "failed" && run_install
         }
      else echo "failed" || run_install
     fi
     run_script
 }
+
+
+
 
 run_manual()
 {
@@ -121,15 +129,7 @@ run_manual()
    read -p "Enter package name: " pk
       echo ""
       echo ""
-      dpkg -s $pk >/dev/null 2>&1 
-      if [ $? == 1 ]
-        then pkg install $pk -y
-        if [ $? == 0 ]
-        then echo "done ! package has been successfully installed"
-        else echo "failed"
-         fi
-      else echo  "package already installed"
-      fi
+      dpkg -s $pk >/dev/null 2>&1 || pkg install $pk && clear && echo "package has successfully installed" || echo "failed"
 
 run_script
 }
@@ -158,11 +158,7 @@ run_uninstall()
     if [ $ans == "y" ]
     then
         {
-        pkg  uninstall ${pkg[@]} -y
-        if [ $? == 0 ]
-        then echo "finished" 
-        else  echo " failed try again" || run_uninstall
-        fi
+        pkg  uninstall ${pkg[@]} -y && clear && echo "finished uninstalling" || echo " failed"
         }
     else echo "failed" || run_uninstall
     fi
@@ -174,23 +170,17 @@ run_games()
 {
   clear
   banner
-echo ""
-echo ""
-dpkg -s git >/dev/null 2>&1
-      if [ $? == 1 ]
-        then pkg install git -y
-      fi
-echo " working.."
-cd $HOME
-git clone https://github.com/th3cr00k3dm4n/games
-cd $HOME
-cd games
-chmod +x *
-./games.sh
+  echo ""
+  echo ""
+  dpkg -s git >/dev/null 2>&1 || pkg install git -y
+  echo " working.."
+  cd $HOME
+  git clone https://github.com/th3cr00k3dm4n/games
+  cd $HOME
+  cd games
+  chmod +x *
+  ./games.sh  || run_games
 
 }
 
-
-
- run_script
-
+run_depen && run_script
